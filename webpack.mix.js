@@ -12,6 +12,20 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+.js('resources/js/calendar.js', 'public/js')
+.postCss('resources/css/app.css', 'public/css', [
+    require('tailwindcss'),
+    require('autoprefixer'),
+]);
+
+ // Hot Module Replacementの設定
+mix.webpackConfig({
+    devServer: {
+        host: "0.0.0.0",
+        port: 8080,
+    },
+});
+
+if (mix.inProduction()) {
+    mix.version();
+}
