@@ -14,6 +14,7 @@ class Character extends Model
         'image',
         'category_id'
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -24,10 +25,10 @@ class Character extends Model
     }
     public function comments()
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comment::class);
     }
     public function getImagePathAttribute()
     {
-        return 'images/Characters/' . $this->image;
+        return 'images/characters/' . $this->image;
     }
 }

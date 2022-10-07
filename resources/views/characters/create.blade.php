@@ -15,6 +15,7 @@
                     class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full py-2 px-3"
                     required placeholder="タイトル" value="{{ old('title') }}">
             </div>
+
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm mb-2" for="category">
                     カテゴリー
@@ -23,10 +24,11 @@
                     <div>
                         <input type="radio" name="category_id" id="category{{ $category->id }}"
                             value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'checked' : '' }}>
-                        <label for="category{{ $category->id }}">{{ $category->name }}</label>
+                        <label for="category{{ $category->id }}">{{ $category->gender }}</label>
                     </div>
                 @endforeach
             </div>
+
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm mb-2" for="body">
                     詳細
@@ -35,12 +37,14 @@
                     class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full py-2 px-3"
                     required>{{ old('description') }}</textarea>
             </div>
+
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm mb-2" for="image">
-                    食事の画像
+                    画像
                 </label>
                 <input type="file" name="image" class="border-gray-300">
             </div>
+            
             <input type="submit" value="登録"
                 class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         </form>

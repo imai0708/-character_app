@@ -48,11 +48,12 @@ class characterController extends Controller
 
         $file = $request->file('image');
         $character->image = self::createFileName($file);
+        // dd($character->image);
 
         DB::beginTransaction();
         try {
             $character->save();
-            if (!storage::pustFileAs('public/images/posts', $file, $character->image)) {
+            if (!Storage::putFileAs('images/posts', $file, $character->image)) {
                 throw new \Exception('画像ファイルの保存に失敗しました。');
             }
             DB::commit();
@@ -62,7 +63,7 @@ class characterController extends Controller
         }
 
         return redirect()
-            ->route('character.show', $character)
+            ->route('characters.show', $character)
             ->with('notice', '記事を登録しました');
     }
 
@@ -74,13 +75,17 @@ class characterController extends Controller
      */
     public function show($id)
     {
-        $character = Character::find($id);
-        if (Auth::user()) {
-            return view('chracters.show', compact('character', 'comments'));
-        } else {
-            return view('chacter.show', compact('chacter'));
-        }
+        // $character = Character::find($id);
+        $character = Character::with('user')->find($id);
+        $comments = $character->comments()->latest()->get()->load(['user']);
+
+        // if (Auth::user()) {
+        //     return view('chracters.show', compact('character', 'comments'));
+        // } else {
+        //     return view('characters.show', compact('character'));
+        return view('characters.show', compact('character', 'comments'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -104,25 +109,25 @@ class characterController extends Controller
      */
     public function update(CharacterRequest $request, $id)
     {
-        $chacter = Character::find($id);
-        $chacter->fill($request->all());
+        $character = Character::find($id);
+        $character->fill($request->all());
 
-        if ($request->user()->cannot('update', $chacter)) {
-            return redirect()->route('posts.show', $chacter)
+        if ($request->user()->cannot('update', $character)) {
+            return redirect()->route('posts.show', $character)
                 ->withErrors('自分の記事以外は更新できません');
         }
 
         $file = $request->file('image');
         if ($file) {
-            $delete_file_path = $chacter->image_path;
-            $chacter->image = self::createFileName($file);
+            $delete_file_path = $character->image_path;
+            $character->image = self::createFileName($file);
         }
 
         DB::beginTransaction();
         try {
-            $chacter->save();
+            $character->save();
             if ($file) {
-                if (!Storage::putFileAs('images/characters', $file, $chacter->image)) {
+                if (!Storage::putFileAs('images/characters', $file, $character->image)) {
                     throw new \Exception('画像ファイルの保存に失敗しました。');
                 }
                 if (!Storage::delete($delete_file_path)) {
@@ -136,7 +141,7 @@ class characterController extends Controller
         }
 
         return redirect()
-            ->route('character.show', $chacter)
+            ->route('character.show', $character)
             ->with('notice', '記事を更新しました');
     }
 
@@ -163,7 +168,7 @@ class characterController extends Controller
         }
 
         return redirect()
-            ->route('chacter.index')
+            ->route('characters.index')
             ->with('notice', '記事を削除しました');
     }
     public static function createFileName($file)

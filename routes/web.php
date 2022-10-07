@@ -25,10 +25,10 @@ Route::get('/dashboard', function () {
 
 require __DIR__ . '/auth.php';
 
-Route::resource('character', CharacterController::class)
+Route::resource('characters', CharacterController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])
     ->middleware('auth');
-Route::resource('character', CharacterController::class)
+Route::resource('characters', CharacterController::class)
     ->only(['show', 'index']);
 
 Route::resource('characters.comments', CommentController::class)
