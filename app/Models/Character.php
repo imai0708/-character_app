@@ -28,6 +28,6 @@ class Character extends Model
     }
     public function getImagePathAttribute()
     {
-        return 'images/meals/' . $this->image;
+        return 'images/Characters/' . $this->image;
     }
 }

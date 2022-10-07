@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\characterController;
 use App\Http\Controllers\CommentController;
 
 /*
@@ -15,9 +15,9 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CharacterController::class, 'index'])
+    ->name('root');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -25,10 +25,13 @@ Route::get('/dashboard', function () {
 
 require __DIR__ . '/auth.php';
 
+Route::resource('character', CharacterController::class)
+    ->only(['create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware('auth');
+Route::resource('character', CharacterController::class)
+    ->only(['show', 'index']);
 
-
-
-Route::resource('posts.comments', CommentController::class)
+Route::resource('characters.comments', CommentController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])
     ->middleware('auth');
 
